@@ -1,0 +1,53 @@
+using System;
+
+public class Money
+{
+    public int Rubles { get; }
+    public int Kopecks { get; }
+
+    public Money(int rubles, int kopecks)
+    {
+        Rubles = rubles + kopecks / 100;
+        Kopecks = kopecks % 100;
+    }
+
+    public static Money operator +(Money a, Money b)
+    {
+        int totalKopecks = a.Kopecks + b.Kopecks;
+        int extraRubles = totalKopecks / 100;
+        int kopecks = totalKopecks % 100;
+        return new Money(a.Rubles + b.Rubles + extraRubles, kopecks);
+    }
+
+    public static bool operator ==(Money a, Money b)
+    {
+        return a.Rubles == b.Rubles && a.Kopecks == b.Kopecks;
+    }
+
+    public static bool operator !=(Money a, Money b)
+    {
+        return !(a == b);
+    }
+
+    public override string ToString()
+    {
+        return $"{Rubles} руб {Kopecks:00} коп";
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        var m1 = new Money(10, 50);
+        var m2 = new Money(5, 75);
+
+        Console.WriteLine(m1 + m2); // 16 руб 25 коп
+        Console.WriteLine(m1 == new Money(10, 50)); // True
+      
+        Console.WriteLine("\nНажмите любую клавишу для выхода...");
+        Console.ReadLine();
+    }
+}
