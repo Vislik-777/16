@@ -1,0 +1,105 @@
+using System;
+
+public class Time
+{
+    public int Hours { get; set; }
+    public int Minutes { get; set; }
+    public int Seconds { get; set; }
+
+    public Time(int hours, int minutes, int seconds)
+    {
+        if (hours < 0 || hours > 23) throw new ArgumentOutOfRangeException(nameof(hours), "Часы от 0 до 23.");
+        if (minutes < 0 || minutes > 59) throw new ArgumentOutOfRangeException(nameof(minutes), "Минуты от 0 до 59.");
+        if (seconds < 0 || seconds > 59) throw new ArgumentOutOfRangeException(nameof(seconds), "Секунды от 0 до 59.");
+        Hours = hours;
+        Minutes = minutes;
+        Seconds = seconds;
+    }
+
+    public static bool operator >(Time t1, Time t2)
+    {
+        if (t1.Hours > t2.Hours) return true;
+        if (t1.Hours < t2.Hours) return false;
+        if (t1.Minutes > t2.Minutes) return true;
+        if (t1.Minutes < t2.Minutes) return false;
+        return t1.Seconds > t2.Seconds;
+    }
+
+    public static bool operator <(Time t1, Time t2)
+    {
+        return !(t1 > t2);
+    }
+
+    public static bool operator ==(Time t1, Time t2)
+    {
+        return t1.Hours == t2.Hours && t1.Minutes == t2.Minutes && t1.Seconds == t2.Seconds;
+    }
+
+    public static bool operator !=(Time t1, Time t2)
+    {
+        return !(t1 == t2);
+    }
+
+    public int this[int index]
+    {
+        get
+        {
+            switch (index)
+            {
+                case 0: return Hours;
+                case 1: return Minutes;
+                case 2: return Seconds;
+                default: throw new IndexOutOfRangeException($"Индекс {index} недопустим.");
+            }
+        }
+        set
+        {
+            if (index == 0 && value >= 0 && value <= 23) Hours = value;
+            else if (index == 1 && value >= 0 && value <= 59) Minutes = value;
+            else if (index == 2 && value >= 0 && value <= 59) Seconds = value;
+           
+        }
+    }
+
+    public override string ToString()
+    {
+        return $"{Hours:00}:{Minutes:00}:{Seconds:00}";
+    }
+}
+
+public class Program
+{
+    public static void Main(string[] args)
+    {
+        Console.OutputEncoding = System.Text.Encoding.UTF8;
+
+        var t1 = new Time(14, 35, 9);
+        var t2 = new Time(9, 10, 5);
+
+        Console.WriteLine(t1 > t2); // True
+        Console.WriteLine(t1[1]);   // 35
+        t1[2] = 59;
+        Console.WriteLine(t1);      // 14:35:59
+
+        try
+        {
+            t1[3] = 10;
+        }
+        catch (IndexOutOfRangeException ex)
+        {
+            Console.WriteLine($"Ошибка: {ex.Message}");
+        }
+
+        try
+        {
+            t2[0] = 25;
+        }
+        catch (ArgumentOutOfRangeException ex)
+        {
+            Console.WriteLine($"Ошибка: {ex.Message}");
+        }
+
+        Console.WriteLine("Нажмите любую клавишу для выхода...");
+        Console.ReadLine();
+    }
+}
