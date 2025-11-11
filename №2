@@ -1,0 +1,62 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp51
+{
+    class Program
+    {
+        static void Main()
+        {
+            var s = new Score();
+            s["Математика"] = 5;
+            s["Русский"] = 4;
+            Console.WriteLine(s["Математика"]); // 5
+            Console.WriteLine(s); // Математика: 5, Русский: 4, Физика: 0
+        }
+    }
+}
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace ConsoleApp51
+{
+    using System;
+    using System.Collections.Generic;
+
+    public class Score
+    {
+        private Dictionary<string, int> _scores = new Dictionary<string, int>
+    {
+        { "Математика", 0 },
+        { "Русский", 0 },
+        { "Физика", 0 }
+    };
+
+        // Индексатор
+        public int this[string subject]
+        {
+            get
+            {
+                return _scores.ContainsKey(subject) ? _scores[subject] : 0;
+            }
+            set
+            {
+                if (_scores.ContainsKey(subject))
+                    _scores[subject] = value;
+            }
+        }
+
+        // Переопределение ToString()
+        public override string ToString()
+        {
+            return string.Join(", ", _scores.Select(kv => $"{kv.Key}: {kv.Value}"));
+        }
+    }
+}
